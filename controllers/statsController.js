@@ -143,3 +143,42 @@ export const getTodayStats = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+// /stats/byDate?userId=xxx&date=2025-07-17
+export const getStatsByDate = async (req, res) => {
+  try {
+    const { userId, date } = req.query;
+
+    if (!userId || !date) {
+      return res.status(400).json({ error: "userId と date が必要です" });
+    }
+
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    const logs = await StudyLog.find({
+      userId,
+      startedAt: { $gte: start, $lte: end }
+    });
+
+    const totalSeconds = logs.reduce((sum, log) => sum + log.durationSeconds, 0);
+
+    const taskMap = {};
+    logs.forEach(log => {
+      taskMap[log.taskId] = (taskMap[log.taskId] || 0) + log.durationSeconds;
+    });
+
+    res.json({
+      totalSeconds,
+      taskSummary: Object.entries(taskMap).map(([taskId, seconds]) => ({
+        taskId,
+        seconds
+      }))
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
