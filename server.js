@@ -18,11 +18,14 @@ console.log("process.env.PORT =", process.env.PORT);
 app.use(
   cors({
     origin: [
-      "http://localhost:5001",
-      "https://pomo-frontend.vercel.app",
+      "http://localhost:5173",
+      "https://pomo-front.vercel.app",
     ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
   })
 );
+
 
 app.use(express.json());
 app.use("/tasks", taskRoutes);
