@@ -18,7 +18,7 @@ console.log("process.env.PORT =", process.env.PORT);
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
+      "http://localhost:5001",
       "https://pomo-frontend.vercel.app",
     ],
   })
