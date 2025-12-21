@@ -15,7 +15,15 @@ const app = express();
 console.log("process.env.PORT =", process.env.PORT);
 
 // ミドルウェア
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://pomo-frontend.vercel.app",
+    ],
+  })
+);
+
 app.use(express.json());
 app.use("/tasks", taskRoutes);
 app.use("/timerSets", timerSetRoutes);
